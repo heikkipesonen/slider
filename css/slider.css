@@ -15,7 +15,7 @@
 }
 
 .slider-parent ul{
-	list-style-type: none;
+	list-style-type: none;	
 	height: 100%;
 	margin:0px;
 	padding: 0px;
@@ -52,8 +52,7 @@
 	float: left;
 	width: 16px;
 	height: 16px;
-	border: 2px solid rgba(24,24,24,0.4);
-	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
+	border: 2px solid rgba(24,24,24,0.4);	
 	background-color:rgba(255,255,255,0.7);
 	border-radius: 50%;
 	margin: 2px;
@@ -69,5 +68,5 @@
 }
 
 .slider-indicators>.slider-indicator.selected{
-	background-color: rgba(0,124,255,0.4);
+	background-color: rgba(0,174,255,0.4);
 }
