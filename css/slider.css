@@ -1,10 +1,5 @@
 .slider-parent{
-	border: 1px solid #dd0;
-	width: 800px;
-	height: 60%;
-	position: absolute;
-	left: 20%;
-	top:20%;	
+	position: relative;
 	overflow: hidden;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -12,18 +7,54 @@
 	-ms-user-select: none;
 }
 
-.indicators{
+.slider-parent .slider{
+	position: absolute;
+	top:0px;
+	left:0px;
+	height: 100%;
+}
+
+.slider-parent ul{
+	list-style-type: none;
+	height: 100%;
+	margin:0px;
+	padding: 0px;
+	-webkit-margin-before:0;
+	-webkit-margin-after:0;
+	-webkit-margin-start:0;
+	-webkit-margin-end:0;
+	-webkit-padding-start:0;
+	-moz-margin-before:0;
+	-moz-margin-after:0;
+	-moz-margin-start:0;
+	-moz-margin-end:0;
+	-moz-padding-start:0;
+	-o-margin-before:0;
+	-o-margin-after:0;
+	-o-margin-start:0;
+	-o-margin-end:0;
+	-o-padding-start:0;
+	-ms-margin-before:0;
+	-ms-margin-after:0;
+	-ms-margin-start:0;
+	-ms-margin-end:0;
+	-ms-padding-start:0;
+}
+
+.slider-indicators{
 	float: left;
 	position: absolute;
 	left: 50%;
 	bottom:5px;
 }
 
-.indicators>.indicator{
+.slider-indicators>.slider-indicator{
 	float: left;
 	width: 16px;
 	height: 16px;
 	border: 2px solid rgba(24,24,24,0.4);
+	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5);
+	background-color:rgba(255,255,255,0.7);
 	border-radius: 50%;
 	margin: 2px;
 	cursor: pointer;
@@ -33,10 +64,10 @@
 	-ms-transition-duration:0.3s;
 }
 
-.indicators>.indicator:hover{
+.slider-indicators>.slider-indicator:hover{
 	background-color: rgba(124,124,124,0.4);
 }
 
-.indicators>.indicator.selected{
-	background-color: rgba(24,24,24,0.4);
+.slider-indicators>.slider-indicator.selected{
+	background-color: rgba(0,124,255,0.4);
 }

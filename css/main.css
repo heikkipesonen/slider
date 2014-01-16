@@ -6,26 +6,19 @@
 	height: 100%;
 }
 
-
-ul{
+#slider{
 	position: absolute;
 	left:0px;
 	top:0px;
-	overflow: hidden;
-	list-style-type: none;
+	width: 100%;
 	height: 100%;
-	-webkit-margin-before:0;
-	-webkit-margin-after:0;
-	-webkit-margin-start:0;
-	-webkit-margin-end:0;
-	-webkit-padding-start:0;
-
+	overflow: hidden;	
 }
 
 li{
 
-	width: 600px;	
-	height: 90%;
+	width: 1024px;
+	height: 100%;
 	border: 1px solid #d00;
 	
 }
