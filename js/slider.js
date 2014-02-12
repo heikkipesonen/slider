@@ -15,6 +15,7 @@ function Slider(el,opts){
 	this._content = {};
 	this._idletimer = false;
 	this._opts = {
+		tolerance:15,
 		duration:300,
 		tension:0.2,
 		velocity:2,
@@ -43,9 +44,11 @@ Slider.prototype = {
 		}
 		
 		this._el.hammer().on('tap','.link',function(e){
-			e.stopPropagation();
-			me._setTimer();
-			me._click(e,$(this));
+			if (!$(this).hasClass('disabled')){				
+				e.stopPropagation();
+				me._setTimer();
+				me._click(e,$(this));
+			}
 		});
 
 		this._el.hammer().on('dragstart dragend drag',function(e){
@@ -53,7 +56,7 @@ Slider.prototype = {
 			e.preventDefault();
 			if (me['_'+e.type]) me['_'+e.type](e);
 		});
-		
+
 		$(window).resize(function(){me._setWidth(); me.checkPosition()});		
 		this.showSlide( this._slides.first() );
 	},	
@@ -82,7 +85,7 @@ Slider.prototype = {
 	hasMoved:function(evt){
 		var deltaX = evt.gesture.deltaX - this._startEvent.gesture.deltaX,
 			deltaY = evt.gesture.deltaY - this._startEvent.gesture.deltaY;
-		return Math.abs(deltaX) > 20 || Math.abs(deltaY) > 20;
+		return Math.abs(deltaX) > this._opts.tolerance || Math.abs(deltaY) > this._opts.tolerance;
 	},
 	_move:function(px,animate){
 		this._position += px;
@@ -187,7 +190,7 @@ Slider.prototype = {
 	},
 	_drag:function(evt){
 		if (this._startEvent.gesture && this._ondrag){
-			if(Math.abs(evt.gesture.deltaX - this._startEvent.gesture.deltaX) > 20){			
+			if(Math.abs(evt.gesture.deltaX - this._startEvent.gesture.deltaX) > this._opts.tolerance){			
 				var dist = this._lastEvent.gesture.deltaX - evt.gesture.deltaX;
 				if (dist > 0){
 					if (!this.hasNext()){
