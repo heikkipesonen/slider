@@ -1,15 +1,11 @@
-$.fn.extend({
-	slider:function(opts){
-		return new Slider(this,opts);
-	}
-});
+'use strict';
 
 function Slider(el,opts){
-	this._el = el;	
+	this._el = el;
 	this._el.addClass('slider-parent');
 	this._slider = el.find('>ul');
 	this._slider.addClass('slider');
-	this._indicators = $('<div class="slider-indicators"></div>');	
+	this._indicators = $('<div class="slider-indicators"></div>');
 	this._animating = false;
 	this._deltaX = 0;
 	this._content = {};
@@ -23,7 +19,7 @@ function Slider(el,opts){
 		indicators:true,
 		parallax:true,
 		parallaxRatio:0.5
-	}
+	};
 
 	if (opts){
 		for (var i in opts){
@@ -45,15 +41,15 @@ Slider.prototype = {
 			this._parrallax = $('<div class="slider-parallax-layer"></div>');
 			this._el.prepend(this._parrallax);
 		}
-		
+
 		this._setWidth();
-		
+
 		if (this._opts.indicators){
 			this._createIndicators();
 		}
-		
+
 		this._el.hammer().on('tap','.link',function(e){
-			if (!$(this).hasClass('disabled')){				
+			if (!$(this).hasClass('disabled')){
 				e.stopPropagation();
 				me._setTimer();
 				me._click(e,$(this));
@@ -63,20 +59,22 @@ Slider.prototype = {
 		this._el.hammer().on('dragstart dragend drag',function(e){
 			e.stopPropagation();
 			e.preventDefault();
-			if (me['_'+e.type]) me['_'+e.type](e);
+			if (me['_'+e.type]){
+				me['_'+e.type](e);
+			}
 		});
 
 
-		$(window).resize(function(){me._setWidth(); me.checkPosition(false)});		
+		$(window).resize(function(){me._setWidth(); me.checkPosition(false);});
 		this.showSlide( this._slides.first() );
-	},	
+	},
 	_click:function(evt,el){
-		
+
 		this._onclick(evt,el);
 		if (el.attr('data-link')){
 			this.show('#'+el.attr('data-link') ,true);
 		}
-	},	
+	},
 	_onclick:function(e,el){
 		if (this.onClick){
 			this.onClick.call(el,e);
@@ -102,19 +100,19 @@ Slider.prototype = {
 		this._deltaX += px;
 		this._setPosition(this._position,animate);
 	},
-	_setPosition:function(position, animate, duration){		
+	_setPosition:function(position, animate, duration){
 		var me = this;
-	
+
 		this._position = position;
 		this._setPrefix(this._slider,'transform','translate3d('+this._position+'px,0px,0px)');
-		
+
 		if (this._parrallax){
 			this._setPrefix(this._parrallax,'transform','translate3d('+(this._position*this._opts.parallaxRatio)+'px,0px,0px)');
 		}
-			
+
 		if (animate){
-			this._animating = true;				
-			this._setPrefix(this._slider,'transition-duration',duration || this._opts.duration+'ms');				
+			this._animating = true;
+			this._setPrefix(this._slider,'transition-duration',duration || this._opts.duration+'ms');
 
 			if (this._parrallax){
 				this._setPrefix(this._parrallax,'transition-duration',duration || this._opts.duration+'ms');
@@ -125,13 +123,13 @@ Slider.prototype = {
 				me._onchange(me.getNearestOfCenter());
 			},duration || this._opts.duration);
 		} else {
-			this._setPrefix(this._slider,'transition-duration','0')
+			this._setPrefix(this._slider,'transition-duration','0');
 			this._onchange(this.getNearestOfCenter());
 
 			if (this._parrallax){
 				this._setPrefix(this._parrallax,'transition-duration','0ms');
 			}
-		}		
+		}
 	},
 	_setPrefix:function(el,prop,attr){
 		var prefix = 'moz ie o webkit'.split(' ');
@@ -157,14 +155,19 @@ Slider.prototype = {
 	},
 	_setWidth:function(){
 		var w = 0,
-			me = this,			
+			me = this,
 			auto = false;
+
 		this._setPrefix(this._slider,'transition-duration','0');
-		if (this._el.hasClass('autosize')) auto = true;
+
+		if (this._el.hasClass('autosize')){
+			auto = true;
+		}
+
 		this._setPrefix(this._slider,'transition-duration','0ms');
-		
-		this._slides.each(function(){			
-			if ($(this).attr('data-disabled') != 'true'){
+
+		this._slides.each(function(){
+			if ($(this).attr('data-disabled') !== 'true'){
 
 				$(this).css({
 						'position':'absolute',
@@ -178,15 +181,15 @@ Slider.prototype = {
 
 				if (auto){
 					$(this).css({width:me._el.innerWidth(),height:me._el.innerHeight()});
-				}			
+				}
 
-				w += $(this).outerWidth();			
+				w += $(this).outerWidth();
 			}
 		});
 
 		this._el.find('>ul').width(w);
 		if (this._parrallax){
-			this._parrallax.width(w);
+			this._parrallax.width(w * this._opts.parallaxRatio);
 			this._parrallax.height(this._el.height());
 		}
 	},
@@ -202,7 +205,7 @@ Slider.prototype = {
 		},2000);
 	},
 	_dragstart:function(evt){
-		this._deltaX = 0;		
+		this._deltaX = 0;
 		this._ondrag = true;
 		this._startEvent = evt;
 		this._lastEvent = evt;
@@ -219,7 +222,7 @@ Slider.prototype = {
 	},
 	_drag:function(evt){
 		if (this._startEvent.gesture && this._ondrag){
-			if(Math.abs(evt.gesture.deltaX - this._startEvent.gesture.deltaX) > this._opts.tolerance){			
+			if(Math.abs(evt.gesture.deltaX - this._startEvent.gesture.deltaX) > this._opts.tolerance){
 				var dist = this._lastEvent.gesture.deltaX - evt.gesture.deltaX;
 				if (dist > 0){
 					if (!this.hasNext()){
@@ -238,7 +241,7 @@ Slider.prototype = {
 	_checkChanged:function(){
 		if (this._lastEvent.gesture){
 			var dist = this._lastEvent.gesture.deltaX - this._startEvent.gesture.deltaX,
-				velocity = dist / (this._lastEvent.timeStamp - this._startEvent.timeStamp);		
+				velocity = dist / (this._lastEvent.timeStamp - this._startEvent.timeStamp);
 
 			if (Math.abs(dist) > (this._opts.tension)){
 				if (Math.abs(dist) > this._visibleSlide.outerWidth()){
@@ -265,8 +268,11 @@ Slider.prototype = {
 		}
 		return false;
 	},
-	checkPosition:function(animate){			
-		if (animate === undefined) animate = true;
+	checkPosition:function(animate){
+		if (animate === undefined){
+			animate = true;
+		}
+
 		this.showSlide( this.getNearestOfCenter() , animate );
 	},
 	getNearestOfCenter:function(){
@@ -274,16 +280,16 @@ Slider.prototype = {
 			center = this._el.outerWidth()/2,
 			closest = Infinity,
 			onCenter = false;
-		
+
 		this._slides.each(function(){
-			if ($(this).attr('data-disabled') != 'true'){				
+			if ($(this).attr('data-disabled') !== 'true'){
 				var slideCenter = $(this).offset().left + $(this).outerWidth()/2,
 					distToCenter = Math.abs( center - slideCenter );
 
 				if (distToCenter < closest){
 					onCenter = $(this);
-					closest = distToCenter;				
-				}				
+					closest = distToCenter;
+				}
 			}
 		});
 		return onCenter;
@@ -292,10 +298,10 @@ Slider.prototype = {
 		this.showSlide(this._slider.find(slide), animate, duration);
 	},
 	showSlide:function(slide,animate,duration){
-		if (slide && slide.length > 0 && slide.attr('data-disabled') != 'true'){
+		if (slide && slide.length > 0 && slide.attr('data-disabled') !== 'true'){
 			this._setIndicator(slide);
 			this._setPosition( (this._el.innerWidth()/2) - (slide.position().left + (slide.outerWidth()/2)), animate, duration);
-			this._onshow(slide);			
+			this._onshow(slide);
 			this._visibleSlide = slide;
 			return true;
 		}
@@ -303,18 +309,21 @@ Slider.prototype = {
 	},
 	hasNext:function(){
 		if (this._visibleSlide.next().length > 0){
-			return this._visibleSlide.next().attr('data-disabled') != 'true';
+			return this._visibleSlide.next().attr('data-disabled') !== 'true';
 		}
 		return false;
 	},
 	hasPrev:function(){
 		if (this._visibleSlide.prev().length > 0){
-			return this._visibleSlide.prev().attr('data-disabled') != 'true';
+			return this._visibleSlide.prev().attr('data-disabled') !== 'true';
 		}
 		return false;
 	},
 	next:function(animate, duration){
-		if (animate === undefined) animate = true;
+		if (animate === undefined){
+			animate = true;
+		}
+
 		if (this.hasNext()){
 			this.showSlide( this._visibleSlide.next() , animate, duration);
 		} else {
@@ -322,9 +331,12 @@ Slider.prototype = {
 		}
 	},
 	prev:function(animate, duration){
-		if (animate === undefined) animate = true;
+		if (animate === undefined){
+			animate = true;
+		}
+
 		if (this.hasPrev() ){
-			this.showSlide( this._visibleSlide.prev(), animate, duration );	
+			this.showSlide( this._visibleSlide.prev(), animate, duration );
 		} else {
 			this.showSlide( this._visibleSlide , animate, duration );
 		}
@@ -339,6 +351,7 @@ Slider.prototype = {
 	},
 	addContent:function(content){
 		var c = $(content);
+
 		if (!c.attr('id')){
 			c.attr('id') = Date.now() + (Math.random()*1000);
 		}
@@ -353,4 +366,10 @@ Slider.prototype = {
 	showContent:function(slide,content_id){
 		this._slider.find(slide).html( this.getContent(content_id));
 	}
-}
+};
+
+$.fn.extend({
+	slider:function(opts){
+		return new Slider(this,opts);
+	}
+});
